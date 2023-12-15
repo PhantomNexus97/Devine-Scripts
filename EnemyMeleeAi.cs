@@ -5,56 +5,58 @@ using UnityEngine.AI;
 
 public class EnemyMeleeAi : MonoBehaviour
 {
-    public NavMeshAgent agent;
+    public NavMeshAgent agent;  // Reference to the NavMeshAgent component for navigation.
 
-    public Transform player;
+    public Transform player;  // Reference to the player's transform.
 
-    public LayerMask whatIsGround, whatIsPlayer;
+    public LayerMask whatIsGround, whatIsPlayer;  // Layer masks for identifying ground and player.
 
-    //Patrol
+    // Patrol
     public Vector3 walkPoint;
     bool walkPointSet;
-    public float WalkPointRange;
+    public float WalkPointRange;  // Range for selecting random patrol points.
 
-    public Transform centrePoint;
+    public Transform centrePoint;  // Center point for random patrol destinations.
 
-    //Attacking
+    // Attacking
     public float timeBetweenAttacks;
     bool alreadyAttack;
-    public GameObject MeleeBox;
+    public GameObject MeleeBox;  // Melee attack hitbox.
 
-    //States
-    public float sightRange, attackRange;
-    public bool playerInSightRange, playerInAttackRange;
+    // States
+    public float sightRange, attackRange;  // Detection ranges for sight and attack.
+    public bool playerInSightRange, playerInAttackRange;  // Flags indicating player presence in sight and attack ranges.
 
     private void Awake()
     {
-        player = GameObject.Find("Player").transform;
-        agent = GetComponent<NavMeshAgent>();
+        player = GameObject.Find("Player").transform;  // Find the player's transform.
+        agent = GetComponent<NavMeshAgent>();  // Get the NavMeshAgent component on this GameObject.
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Check Sight and attack range
+        // Check Sight and attack range
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
-        if (!playerInSightRange && !playerInAttackRange) Patroling();
-        if (playerInSightRange && !playerInAttackRange) ChasePlayer();
-        if (playerInAttackRange && playerInSightRange) AttackPlayer();
-
-
+        if (!playerInSightRange && !playerInAttackRange)
+            Patroling();  // Patrol if the player is neither in sight nor in attack range.
+        if (playerInSightRange && !playerInAttackRange)
+            ChasePlayer();  // Chase the player if in sight but not in attack range.
+        if (playerInAttackRange && playerInSightRange)
+            AttackPlayer();  // Attack the player if in both sight and attack range.
     }
+
     private void Patroling()
     {
-        if (agent.remainingDistance <= agent.stoppingDistance) //done with path
+        if (agent.remainingDistance <= agent.stoppingDistance)
         {
             Vector3 point;
-            if (RandomPoint(centrePoint.position, WalkPointRange, out point)) //pass in our centre point and radius of area
+            if (RandomPoint(centrePoint.position, WalkPointRange, out point))
             {
                 walkPointSet = true;
-                Debug.DrawRay(point, Vector3.up, Color.blue, 1.0f); //so you can see with gizmos
+                Debug.DrawRay(point, Vector3.up, Color.blue, 1.0f);
                 agent.SetDestination(point);
             }
             walkPointSet = false;
@@ -63,13 +65,10 @@ public class EnemyMeleeAi : MonoBehaviour
 
     bool RandomPoint(Vector3 center, float range, out Vector3 result)
     {
-
-        Vector3 randomPoint = center + Random.insideUnitSphere * range; //random point in a sphere 
+        Vector3 randomPoint = center + Random.insideUnitSphere * range;
         NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomPoint, out hit, 25.0f, NavMesh.AllAreas)) //documentation: https://docs.unity3d.com/ScriptReference/AI.NavMesh.SamplePosition.html
+        if (NavMesh.SamplePosition(randomPoint, out hit, 25.0f, NavMesh.AllAreas))
         {
-            //the 1.0f is the max distance from the random point to a point on the navmesh, might want to increase if range is big
-            //or add a for loop like in the documentation
             result = hit.position;
             return true;
         }
@@ -89,7 +88,6 @@ public class EnemyMeleeAi : MonoBehaviour
             walkPointSet = true;
     }
 
-
     private void ChasePlayer()
     {
         agent.SetDestination(player.position);
@@ -107,6 +105,7 @@ public class EnemyMeleeAi : MonoBehaviour
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
     }
+
     IEnumerator MeleeTimeBox()
     {
         MeleeBox.SetActive(true);
@@ -116,7 +115,6 @@ public class EnemyMeleeAi : MonoBehaviour
 
     private void ResetAttack()
     {
-
         alreadyAttack = false;
     }
 

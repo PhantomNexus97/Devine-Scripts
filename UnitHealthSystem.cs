@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class UnitHealthSystem 
 {
-    //Fields
+    // Fields for current health and maximum health
     int _currentHealth;
     int _currentMaxHealth;
 
-
-
-    //properties
-
+    // Properties to access current health and maximum health
     public int Health
     {
         get
@@ -35,34 +32,36 @@ public class UnitHealthSystem
         }
     }
 
-    //Constructor
-
+    // Constructor to initialize the health system with specified initial health and maximum health
     public UnitHealthSystem(int health, int maxHealth)
     {
-
         _currentHealth = health;
         _currentMaxHealth = maxHealth;
     }
 
-    //Methods
+    // Method to apply damage to the unit
     public void DmgUnit(int dmgAmount)
     {
+        // Ensure health doesn't go below zero
         if (_currentHealth > 0)
         {
             _currentHealth -= dmgAmount;
         }
     }
 
+    // Method to heal the unit
     public void HealUnit(int healAmount)
     {
+        // Ensure health doesn't exceed the maximum
         if (_currentHealth > 0)
         {
             _currentHealth += healAmount;
         }
+        
+        // Cap the health to the maximum
         if (_currentHealth > _currentMaxHealth)
         {
             _currentHealth = _currentMaxHealth;
         }
-
     }
 }
