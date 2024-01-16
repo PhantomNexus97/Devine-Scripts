@@ -27,7 +27,7 @@ public class WeaponSystem : MonoBehaviour
     public Camera fpsCam;
     public Transform attackPoint;
 
-    //bug fixing :D
+    //bug fixing
     public bool allowInvoke = true;
 
     private void Awake()
@@ -100,7 +100,7 @@ public class WeaponSystem : MonoBehaviour
         bulletsLeft--;
         bulletsShot++;
 
-        //Invoke resetShot function (if not already invoked), with your timeBetweenShooting
+        //Invoke resetShot function (if not already invoked), with our timeBetweenShooting
         if (allowInvoke)
         {
             Invoke("ResetShot", timeBetweenShooting);

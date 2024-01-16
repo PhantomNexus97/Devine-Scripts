@@ -30,10 +30,10 @@ public class VeilArea : MonoBehaviour
     }
 
     // Called when a collider enters the trigger zone
-    void OnTriggerEnter(Collider col)
+    void OnTriggerEnter(Collider other)
     {
         // Check if the collider has the "Veil" tag
-        if (gameObject.tag == "Veil")
+        if (other.CompareTag("Player"))
         {
             // Log a message indicating the player is in the veil
             Debug.Log("Player in veil");

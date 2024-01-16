@@ -8,10 +8,10 @@ public class EnemyHealth : MonoBehaviour
     public UnitHealthSystem _enemyHealth = new UnitHealthSystem(100, 100);
 
     // Called when a collision occurs
-    void OnCollisionEnter(Collision other)
+    void OnCollisionEnter(Collision collision)
     {
         // Check if the collision is with a "Shell" gameObject
-        if (other.gameObject.tag == "Shell")
+        if (collision.gameObject.tag == "Shell")
         {
             // Inflict damage on the enemy
             EnemyTakeDmg(25);
